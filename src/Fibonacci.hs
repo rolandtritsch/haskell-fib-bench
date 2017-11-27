@@ -16,7 +16,6 @@ benchmark them.
 module Fibonacci where
 
 import Data.List
---import Data.Maybe
 import Data.Bits
 
 import Control.Monad.State
@@ -34,9 +33,9 @@ fib010Simple n = assert (n >= 2) (fib010Simple (n - 1) + fib010Simple (n - 2))
 -- | Using accumulator for state passing.
 fib020Accumulator :: Int -> Int
 fib020Accumulator n = assert (n >= 0) go n (0, 1) where
-  go !n (!a, !b)
-    | n == 0 = a
-    | otherwise = go (n - 1) (b, a + b)
+  go !n' (!a, !b)
+    | n' == 0 = a
+    | otherwise = go (n' - 1) (b, a + b)
 
 -- | Monadic.
 fib030Monadic :: Int -> Int
