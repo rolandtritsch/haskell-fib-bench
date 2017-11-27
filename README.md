@@ -14,4 +14,4 @@ To make it work you need to ...
 
 And the winner is ... <drum-roll>**constant**</drum-roll>!!!
 
-![chart](./fib.png)
+![chart](./report/fib.png)
