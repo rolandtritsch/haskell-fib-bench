@@ -4,10 +4,13 @@ This repo implements a [benchmark](https://github.com/bos/criterion) to compare 
 
 To make it work you need to ...
 
-* install `stack` with `brew install haskell-stack`
-* build the benchmark with `stack ghc -- Fib.hs -o fib`
-* run the benchmark with `./fib --output fib.html`
-* look at the [output](./fib.html)
+* install git (`brew install git`)
+* install stack (`brew install haskell-stack`)
+* clone the repo (`git clone ...`)
+* build the benchmark (`stack build`)
+* test the benchmark (`stack test`)
+* run the benchmark (`stack exec -- fib-bench --output report/$(date '+%Y%m%d%H%M%S').html`)
+* look at the report
 
 And the winner is ... <drum-roll>**constant**</drum-roll>!!!
 
