@@ -1,6 +1,22 @@
 {-# LANGUAGE BangPatterns #-}
 
--- Fib.hs
+{-|
+Module      : Fib
+Description : Benchmarking various implementations of the Fibonacci sequence.
+Copyright   : (c) Roland Tritsch, 2017
+License     : GPL-3
+Maintainer  : roland@tritsch.org
+Stability   : experimental
+Portability : POSIX
+
+While I was working through [The Haskell Book](http://haskellbook.com/) I
+stumbled over [Criterion](https://hackage.haskell.org/package/criterion) and
+wanted to learn and understand more how it works.
+
+I then found a couple of [implementations](https://wiki.haskell.org/The_Fibonacci_sequence)
+for the [Fibonacci](https://en.wikipedia.org/wiki/Fibonacci_number) sequence and decide to
+benchmark them.
+-}
 module Main where
 
 import Data.List
@@ -16,15 +32,18 @@ import Test.Hspec
 data InvalidParameterException = InvalidParameterException deriving (Show)
 instance Exception InvalidParameterException
 
+-- | Most simple (and slowest) implementation (O(fib n) additions).
 fib1 :: Int -> Int
 fib1 0 = 0
 fib1 1 = 1
 fib1 n = assert (n >= 2) (fib1 (n - 1) + fib1 (n - 2))
 
+-- | Using accumulator for state passing.
 fib2 :: Int -> Int
-fib2 n = assert (n >= 0) truncate $ (1 / sqrt 5) * (phi^n - psi^n) where
-  phi = (1 + sqrt 5) / 2
-  psi = (1 - sqrt 5) / 2
+fib2 n = go n (0, 1) where
+  go !n (!a, !b)
+    | n == 0 = a
+    | otherwise = go (n - 1) (b, a + b)
 
 fib3 :: Int -> Int
 fib3 n = assert (n >= 0) fibs !! n where
@@ -149,6 +168,11 @@ fib19 :: Int -> Int
 fib19 n = round $ phi ** fromIntegral n / sq5 where
   sq5 = sqrt 5 :: Double
   phi = (1 + sq5) / 2
+
+fib99 :: Int -> Int
+fib99 n = assert (n >= 0) truncate $ (1 / sqrt 5) * (phi^n - psi^n) where
+  phi = (1 + sqrt 5) / 2
+  psi = (1 - sqrt 5) / 2
 
 runTest :: IO ()
 runTest = hspec $ do
