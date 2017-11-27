@@ -1,7 +1,8 @@
+--{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 -- module Main where
 
 import Test.Hspec
-import Test.QuickCheck
+--import Test.QuickCheck
 import Control.Exception (evaluate)
 
 import Fibonacci

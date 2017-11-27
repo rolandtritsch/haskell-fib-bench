@@ -17,6 +17,8 @@ module Main where
 
 import Criterion.Main
 
+import Fibonacci
+
 suite :: [Benchmark]
 suite = [
   bgroup "simple" [

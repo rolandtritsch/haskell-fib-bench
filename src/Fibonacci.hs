@@ -13,10 +13,10 @@ Found a couple of [implementations](https://wiki.haskell.org/The_Fibonacci_seque
 for the [Fibonacci](https://en.wikipedia.org/wiki/Fibonacci_number) sequence and decide to
 benchmark them.
 -}
-module Main where
+module Fibonacci where
 
 import Data.List
-import Data.Maybe
+--import Data.Maybe
 import Data.Bits
 
 import Control.Monad.State
@@ -41,10 +41,10 @@ fib020Accumulator n = assert (n >= 0) go n (0, 1) where
 -- | Monadic.
 fib030Monadic :: Int -> Int
 fib030Monadic n = assert (n >= 0) flip evalState (0, 1) $ do
-  forM [0 .. (n - 1)] $ \_ -> do
+  _ <- ($) forM [0 .. (n - 1)] $ \_ -> do
     (a, b) <- get
     put (b, a + b)
-  (a, b) <- get
+  (a, _) <- get
   return a
 
 -- | Infinite list. Using zipWith.
@@ -56,6 +56,8 @@ fib040ILwithZip n = assert (n >= 0) fibs !! n where
 fib050ILdirectSelfRef :: Int -> Int
 fib050ILdirectSelfRef n = assert (n >= 0) fibs !! n where
   fibs = 0 : 1 : next fibs where
+    -- next [] = assert (False) 0
+    -- next [_] = assert (False) 0
     next (a : t@(b:_)) = (a + b) : next t
 
 -- | Infite list. Using scanl.
@@ -69,10 +71,12 @@ fib070ILscanl2 n = assert (n >= 0) fibs !! n where
   fibs = 0 : scanl (+) 1 fibs
 
 -- | Good implementation of fix.
+fixGood :: (t -> t) -> t
 fixGood f = xs where
   xs = f xs
 
 -- | Bad implementation of fix. Will show quadratic behaviour.
+fixBad :: (t -> t) -> t
 fixBad f = f (fix f)
 
 -- | Infinite list. Using scanl. With fixGood.
@@ -81,8 +85,8 @@ fib080ILscanlFixGood n = assert (n >= 0) fibs !! n where
   fibs = fixGood (scanl (+) 0 . (1:))
 
 -- | Infinite list. Using scanl. With fixBad.
-fib081ILscanlFixGood :: Int -> Int
-fib081ILscanlFixGood n = assert (n >= 0) fibs !! n where
+fib081ILscanlFixBad :: Int -> Int
+fib081ILscanlFixBad n = assert (n >= 0) fibs !! n where
   fibs = fixBad (scanl (+) 0 . (1:))
 
 -- | Infinite list. Using scanl. Again. With fixGood.
@@ -91,8 +95,8 @@ fib082ILscanl2FixGood n = assert (n >= 0) fibs !! n where
   fibs = fixGood ((0:) . scanl (+) 1)
 
 -- | Infinite list. Using scanl. Again. With fixBad.
-fib083ILscanl2FixGood :: Int -> Int
-fib083ILscanl2FixGood n = assert (n >= 0) fibs !! n where
+fib083ILscanl2FixBad :: Int -> Int
+fib083ILscanl2FixBad n = assert (n >= 0) fibs !! n where
   fibs = fixBad ((0:) . scanl (+) 1)
 
 -- ! Infinite list. Using foldr.
